@@ -1,0 +1,11 @@
+# Ignora le cartelle di progetto di IntelliJ IDEA
+.idea/
+
+# Ignora la cartella di output Maven
+target/
+
+# Ignora il file .DS_Store (creato da macOS)
+.DS_Store
+
+# Ignora il file di configurazione del progetto web in IntelliJ IDEA
+web.iml
