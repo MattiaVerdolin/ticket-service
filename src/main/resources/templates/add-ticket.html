@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{master :: layout(_,~{::meta},~{::main/content()})}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="Mattia Verdolin">
+    <meta name="description" content="Add Ticket to Milestone">
+    <title>SUPSI Tickets - Add Ticket</title>
+</head>
+<body>
+<main>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <nav class="h6">
+            <span><a th:href="@{/milestones}">Milestones</a> /</span>
+            <span th:text="${milestone.title}">Milestone Title</span> /
+            <span>Add Ticket</span>
+        </nav>
+    </div>
+
+    <div class="row">
+        <form th:action="@{/milestones/{id}/add-ticket(id=${milestone.id})}" method="post">
+            <div class="mb-3 row">
+                <label for="ticket" class="col-sm-2 col-form-label">Tickets</label>
+                <div class="col-sm-10">
+                    <select id="ticket" name="ticketId" class="form-select">
+                        <option th:each="ticket : ${tickets}" th:value="${ticket.id}" th:text="${ticket.title}"></option>
+                    </select>
+                </div>
+            </div>
+            <hr>
+            <button type="submit" class="btn btn-sm btn-primary mb-3">
+                <span class="bi bi-plus"></span> Aggiungi Ticket
+            </button>
+        </form>
+    </div>
+</main>
+</body>
+</html>

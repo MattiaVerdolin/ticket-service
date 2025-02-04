@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"  th:fragment="layout(title, metas, content)">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="Mattia Verdolin">
+
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/bootstrap-icons.css}" rel="stylesheet">
+
+    <th:block th:replace="${metas}" />
+    <title th:replace="${title}">SUPSI - Tickets</title>
+    <base th:href="@{/}" />
+
+</head>
+<body>
+
+<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" th:href="@{/}">SUPSI TICKETS</a>
+    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <input class="form-control form-control-dark w-100 rounded-0 border-0" type="text" placeholder="Search" id="search-input" aria-label="Search">
+    <div class="navbar-nav" sec:authorize="isAuthenticated()">
+        <div class="nav-item text-nowrap">
+            <a class="nav-link px-3" th:href="@{/logout}">Sign out</a>
+        </div>
+    </div>
+    <div class="navbar-nav" sec:authorize="!isAuthenticated()">
+        <div class="nav-item text-nowrap">
+            <a class="nav-link px-3" th:href="@{/login}">Sign in</a>
+        </div>
+    </div>
+</header>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+            <div class="position-sticky pt-3 sidebar-sticky">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" th:classappend="${servletPath == '/' || #servletPath == '/home-table' ? 'active':''}" th:href="@{/}">
+                            <span class="bi bi-ticket"></span>
+                            Tickets
+                        </a>
+                        <a class="nav-link" th:classappend="${servletPath == '/ticket/new' ? 'active':''}" th:href="@{/ticket/new}">
+                            <span class="bi bi-plus-square"></span>
+                            New ticket
+                        </a>
+                        <hr>
+                        <a class="nav-link" th:classappend="${servletPath == '/milestones' ? 'active':''}" th:href="@{/milestones}">
+                            <span class="bi bi-folder"></span>
+                            Milestones
+                        </a>
+                        <a class="nav-link" th:classappend="${servletPath == '/milestones/new' ? 'active':''}" th:href="@{/milestones/new}">
+                            <span class="bi bi-plus-square"></span>
+                            New milestone
+                        </a>
+
+                        <hr>
+
+                        <a class="nav-link" th:classappend="${servletPath == '/board' ? 'active':''}">
+                            <span class="bi bi-columns-gap"></span>
+                            Tags
+                        </a>
+
+
+                    </li>
+                </ul>
+            </div>
+            <footer class="footer"> © Mattia Verdolin 2025</footer>
+        </nav>
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" id="content_container">
+            <th:block th:insert="${content}"></th:block>
+        </main>
+    </div>
+</div>
+
+<script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.js}"></script>
+<script th:src="@{/js/ajaxSearch.js}"></script>
+
+</body>
+</html>

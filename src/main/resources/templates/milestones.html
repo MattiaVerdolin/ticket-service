@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" th:replace="~{master :: layout(_,~{::meta},~{::main/content()})}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="Mattia Verdolin">
+    <meta name="description" content="Milestones">
+</head>
+<body>
+<main>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Milestones</h1>
+        <div class="mb-2 mb-md-0">
+            <a th:href="@{/milestones/new}" type="button" class="btn btn-sm btn-primary" title="open a new milestone">
+                Create
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <article class="col-sm-6 col-md-6 col-lg-4 col-xl-3" th:each="milestone : ${milestones}">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <p style="color:grey">
+                        <span th:text="'#'+${milestone.id}"> Created by <a href="#" th:text="${milestone.author.username}">Mark</a></span>
+                        <span class="badge bg-primary detail-status" th:text="${milestone.status.name()}">open</span>
+                    </p>
+
+                    <strong><span class="card-title" th:text="${milestone.title}">Milestone title</span></strong>
+                    <hr>
+                    <p class="card-description"><span th:text="${milestone.description}">Ticket description</span></p>
+
+                    <hr>
+
+                    <h6><strong>Progress</strong></h6>
+                    <div class="progress">
+                        <div class="progress-bar"
+                             role="progressbar"
+                             th:style="|width: ${milestone.progress}%;|"
+                             th:aria-valuenow="${milestone.progress}"
+                             aria-valuemin="0"
+                             aria-valuemax="100"
+                             th:text="${#numbers.formatDecimal(milestone.progress, 1, 1)} + '%'">
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <h6 class="d-flex justify-content-between align-items-center">
+                        <strong>Tickets</strong>
+                        <a class="btn btn-sm btn-outline-secondary" type="button" th:href="@{'/milestones/'+${milestone.id} + '/add-ticket'}">
+                            <span class="bi bi-plus"></span>Add New Ticket
+                        </a>
+                    </h6>
+
+                    <div th:each="ticket : ${milestone.listOfTickets}" class="ticket-box mb-2">
+                        <div class="d-flex justify-content-between align-items-center p-2 border rounded bg-light">
+                            <span th:text="${ticket.title}" class="ticket-title">Title</span>
+                            <span class="badge bg-secondary" th:text="${ticket.status.name()}">OPEN</span>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="col-md-12 text-center">
+                        Due Date: <span th:text="${#temporals.format(milestone.dueDate, 'dd/MM/yyyy')}">January 1, 2014</span>
+                    </div>
+
+                    <div class="col-md-12 text-center mt-3">
+                        <a class="btn btn-sm btn-outline-secondary mark-completed-btn"
+                                th:data-milestone-id="${milestone.id}"
+                                th:if="${milestone.status.name() != 'COMPLETED'}">
+                            <span class="bi bi-check"></span>
+                            Mark as Completed
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </div>
+    <article class="col-md-12" th:if="${#lists.isEmpty(milestones)}" style="height:100px">There's no milestones. Yippee!</article>
+</main>
+</body>
+</html>

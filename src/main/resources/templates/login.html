@@ -1,0 +1,41 @@
+
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="author" content="Mattia Verdolin">
+
+        <link th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}" rel="stylesheet">
+        <link th:href="@{/css/login.css}" rel="stylesheet">
+
+        <title>SUPSI Tickets - Login</title>
+    </head>
+    <body class="text-center">
+        <main class="form-signin w-100 m-auto">
+            <form method="post">
+                SUPSI -Tickets
+                <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+
+                <div class="form-floating mb-1">
+                    <input type="text" name="username" class="form-control" id="floatingInput" placeholder="username" autocomplete="username">
+                    <label for="floatingInput">Username</label>
+                </div>
+
+                <div class="form-floating">
+                    <input type="password" name="password"  class="form-control" id="floatingPassword" placeholder="Password" autocomplete="new-password">
+                    <label for="floatingPassword">Password</label>
+                </div>
+                <button class="w-100 btn btn-lg btn-primary mb-1" type="submit">Sign in</button>
+                <a th:href="@{/}" class="btn" id="cancel_button">Cancel</a>
+                <hr/>
+                <p>Non sei ancora registrato? <a th:href="@{/register}">Registrati</a></p>
+            </form>
+
+            <!-- Mostra un messaggio di errore se c'è un parametro `error=true` -->
+            <div th:if="${param.error}" class="error-message">
+                <p>Credenziali non valide o utente inesistente.</p>
+            </div>
+        </main>
+    </body>
+</html>

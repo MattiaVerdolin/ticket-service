@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" th:replace="~{master :: layout(~{::title},_,~{::main/content()})}">
+    <head>
+        <title>SUPSI tickets - Dettaglio ticket</title>
+    </head>
+
+    <body>
+        <main>
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <nav class="h6"><span><a th:href="@{/}">Tickets</a> /</span> <span class="notactive">details</span></nav>
+            </div>
+            <div>
+                <h2 th:text="${ticket.title}">title</h2>
+
+                <section class="row">
+                    <article class="col-md-12">
+                        <div sec:authorize="hasRole('ADMIN')">
+
+<!--                            <a class="btn btn-sm watch-button"-->
+<!--                               th:classappend="${watchedTickets.contains(ticket) ? 'btn-info' : 'btn-outline-info'}"-->
+<!--                               th:data-id="${ticket.id}"-->
+<!--                               th:data-watched="${watchedTickets.contains(ticket)}">-->
+<!--                                <span th:classappend="${watchedTickets.contains(ticket) ? 'bi bi-check' : 'bi bi-eye'}"></span>-->
+<!--                                <span th:text="${watchedTickets.contains(ticket) ? 'Watched' : 'Watch'}"></span>-->
+<!--                            </a>-->
+
+                            <a class="btn btn-sm btn-outline-secondary"
+                               sec:authorize-url="/ticket/*/edit"
+                               th:href="@{'/ticket/'+${ticket.id}+'/edit'}">
+                                <span class="bi bi-pencil"></span>
+                                Edit
+                            </a>
+                            <a class="btn btn-sm btn-outline-danger"
+                               sec:authorize-url="/ticket/*/delete"
+                               th:href="@{'/ticket/'+${ticket.id}+'/delete'}">
+                                <span class="bi bi-trash"></span>
+                                Delete
+                            </a>
+                        </div>
+
+                        <h5 class="pt-3"><span class="bi bi-caret-right-fill"></span> Details</h5>
+                        <hr>
+                        <div class="row">
+                            <div class="col-6 col-md-5">
+                                Type: <strong class="badge bg-success detail-status" th:text="${ticket.type}">bug</strong>
+                            </div>
+                            <div class="col-6 col-md-5">
+                                Status: <span class="badge bg-primary detail-status" th:text="${ticket.status}">open</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 col-md-5">
+                                Created: <span th:text="${#dates.format(ticket.date, 'dd/MM/yyyy @ HH:mm')}">January 1, 2014</span>
+                            </div>
+                            <div class="col-6 col-md-5">
+                                Owner: <a href="#" th:text="${ticket.author.username}">Mark</a></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 col-md-5">
+                                Due Date: <span th:text="${#temporals.format(ticket.dueDate, 'dd/MM/yyyy')}">January 1, 2014</span>
+                            </div>
+                            <div class="col-6 col-md-5">
+                                Assignee: <a href="#" th:text="${ticket.assignee != null ? ticket.assignee.username : 'Unassigned'}">Mark</a></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 col-md-5">
+                                Time Estimate: <span th:text="${ticket.estimate != null ? ticket.estimate + ' hour' : 'Not estimated'}">100.0</span>
+                            </div>
+                            <div class="col-6 col-md-5">
+                                Time Spent: <span th:text="${ticket.timeSpent != null ? ticket.timeSpent + ' hour' : 'Not avaiable'}">0.0</span>
+                            </div>
+                        </div>
+
+                        <!-- Campo Time Spent, visibile solo per l'assignee -->
+                        <div class="row" th:if="${ticket.assignee?.username == #authentication.name}">
+                            <div class="col-md-12">
+                                <h6 class="fw-bold mt-3 mb-2">Update Time Spent</h6>
+                                <form method="post" th:object="${ticket}" th:action="@{/ticket/{id}/update(id=${ticket.id})}" role="form">
+                                    <div class="d-flex align-items-center mt-2">
+                                        <input type="number" id="timeSpent" name="timeSpent" class="form-control w-25 me-2" th:field="*{timeSpent}" placeholder="Time spent in hours">
+                                        <button type="submit" class="btn btn-sm btn-primary">Save</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+
+
+                        <h5 class="pt-3"><span class="bi bi-caret-right-fill"></span> Description</h5>
+                        <hr>
+                        <p th:text="${ticket.description}" class="detail-description">Description ticket</p>
+                        <h5 class="pt-3"><span class="bi bi-caret-right-fill"></span> Attachment</h5>
+                        <hr>
+                        <p th:if="${ticket.attachment == null}">There's no attachment for this ticket</p>
+                        <p th:if="${ticket.attachment != null}">
+                            <a th:href="@{'/ticket/'+${ticket.id}+'/attachment'}" target="_blank" th:text="${ticket.attachment.name}"></a> (<span th:text="${ticket.attachment.contentType}"></span>) <span th:text="${ticket.attachment.readeableSize}"></span>
+                        </p>
+                    </article>
+                </section>
+            </div>
+        </main>
+    </body>
+</html>
