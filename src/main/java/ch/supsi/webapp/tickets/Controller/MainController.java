@@ -1,11 +1,9 @@
 package ch.supsi.webapp.tickets.Controller;
 
 import ch.supsi.webapp.tickets.dto.TicketDTO;
-import ch.supsi.webapp.tickets.model.Attachment;
-import ch.supsi.webapp.tickets.model.Milestone;
-import ch.supsi.webapp.tickets.model.Ticket;
-import ch.supsi.webapp.tickets.model.User;
+import ch.supsi.webapp.tickets.model.*;
 import ch.supsi.webapp.tickets.service.MilestoneService;
+import ch.supsi.webapp.tickets.service.TagService;
 import ch.supsi.webapp.tickets.service.TicketService;
 import ch.supsi.webapp.tickets.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,6 +32,7 @@ public class MainController {
 
     private final TicketService ticketService;
     private final UserService userService;
+    private final TagService tagService;
 
     /**
      * Costruttore della classe MainController.
@@ -41,9 +40,10 @@ public class MainController {
      * @param service il servizio per la gestione dei ticket
      * @param userService il servizio per la gestione degli utenti
      */
-    public MainController(TicketService service, UserService userService) {
+    public MainController(TicketService service, UserService userService, TagService tagService) {
         this.ticketService = service;
         this.userService = userService;
+        this.tagService = tagService;
     }
 
     /**
@@ -70,12 +70,18 @@ public class MainController {
      * @return Il nome del template Thymeleaf per la homepage.
      */
     @GetMapping("/")
-    public String index(Model model, Principal principal) {
+    public String index(@RequestParam(value = "tag", required = false) String tag, Model model, Principal principal) {
         if (principal == null) {
             return "redirect:/login";
         }
-        model.addAttribute("tickets", ticketService.getAll());
+
+        List<Ticket> tickets = (tag != null && !tag.isEmpty())
+                ? ticketService.getTicketsByTag(tag)
+                : ticketService.getAll();
+
+        model.addAttribute("tickets", tickets);
         model.addAttribute("user", getCurrentUser(principal));
+
         return "index-card";
     }
 
@@ -305,6 +311,11 @@ public class MainController {
             return userService.getByUsername(principal.getName());
         }
         return null;
+    }
+
+    @ModelAttribute("allTags")
+    public List<String> getAllTags() {
+        return tagService.getAllTags();
     }
 
     /**

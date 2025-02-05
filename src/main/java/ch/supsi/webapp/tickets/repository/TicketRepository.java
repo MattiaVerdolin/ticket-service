@@ -30,4 +30,5 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer> {
      * @return Una lista di massimo 5 ticket che soddisfano i criteri di ricerca.
      */
     List<Ticket> findTop5ByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCaseOrderByDateDesc(String title, String description);
+    List<Ticket> findByTags_Name(String tagName);
 }

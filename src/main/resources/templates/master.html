@@ -61,10 +61,17 @@
 
                         <hr>
 
-                        <a class="nav-link" th:classappend="${servletPath == '/board' ? 'active':''}">
+                        <a class="nav-link">
                             <span class="bi bi-columns-gap"></span>
                             Tags
                         </a>
+                        <div class="d-flex flex-wrap mt-2 px-3">
+                            <a th:each="tag : ${allTags}"
+                               th:href="@{/(tag=${tag})}"
+                               class="badge bg-dark text-white me-1 mb-1 text-decoration-none">
+                                <span th:text="${tag}"></span>
+                            </a>
+                        </div>
 
 
                     </li>

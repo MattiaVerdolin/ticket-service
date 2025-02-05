@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * La classe Ticket rappresenta un'entità che descrive un ticket all'interno del sistema.
@@ -119,5 +121,25 @@ public class Ticket {
 	@ManyToOne
 	@JoinColumn(name = "milestone_id")
 	private Milestone milestone;
+
+	@ManyToMany
+	@JoinTable(
+			name = "ticket_tags",
+			joinColumns = @JoinColumn(name = "ticket_id"),
+			inverseJoinColumns = @JoinColumn(name = "tag_id")
+	)
+	private List<Tag> tags = new ArrayList<>();
+
+	public void addTag(Tag tag) {
+		if (!tags.contains(tag)) {
+			tags.add(tag);
+			tag.getTickets().add(this);
+		}
+	}
+
+	public void removeTag(Tag tag) {
+		tags.remove(tag);
+		tag.getTickets().remove(this);
+	}
 
 }

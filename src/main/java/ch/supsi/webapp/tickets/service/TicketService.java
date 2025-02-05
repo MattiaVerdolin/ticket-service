@@ -112,6 +112,10 @@ public class TicketService {
         return ticketRepository.findAll();
     }
 
+    public List<Ticket> getTicketsByTag(String tagName) {
+        return ticketRepository.findByTags_Name(tagName);
+    }
+
     /**
      * Recupera un ticket specifico per ID.
      *

@@ -30,12 +30,10 @@ public class TicketController {
 
     private final TicketService ticketService;
     private final UserService userService;
-    private final MilestoneService milestoneService;
 
-    public TicketController(TicketService service, UserService userService, MilestoneService milestoneService) {
+    public TicketController(TicketService service, UserService userService) {
         this.ticketService = service;
         this.userService = userService;
-        this.milestoneService = milestoneService;
     }
 
     /**
