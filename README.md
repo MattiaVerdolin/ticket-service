@@ -1,49 +1,79 @@
-# Web Application Platform - Overview
+# Ticket Management System
 
-## Introduction
-This document provides a detailed overview of the web application platform. It describes its primary features, technical stack, and instructions for usage. The platform focuses on managing tickets for a user-centric application, including ticket creation, editing, and visualization.
+## Overview
+This is a **web-based ticket management system** designed to help users create, manage, track, and organize tickets efficiently. The system provides **various functionalities** including ticket creation, milestone tracking, dynamic status updates, tag-based filtering, and a collaborative commenting system.
 
 ---
 
 ## Features
 
-### Ticket Management
-- **Create Tickets:** Users can create tickets with specific details such as title, description, and priority.
-- **Edit Tickets:** Existing tickets can be updated to reflect new details or changes.
-- **View Ticket Details:** Individual ticket details are displayed in a dedicated view.
-- **List Tickets:** A comprehensive dashboard lists all tickets, with sorting and filtering options.
+### **🎫 Ticket Management**
+- Users can **create, view, edit, and delete tickets**.
+- In the **Tickets View**, all tickets are displayed as cards, each containing:
+  - A **view button** to see the details.
+  - An **edit button** to modify the ticket.
+  - A **quick edit function** (for dynamically changing the title and description).
+  - A **change state button** to cycle the ticket status between **Open → In Progress → Done**.
+  - **Closing a ticket permanently** requires direct editing.
+- Users can **assign an estimated resolution time** during creation.
+- **Assigned users** see an additional button to update the **time spent** on resolving the ticket.
 
-### Authentication and Authorization
-- **User Authentication:** Secure login system using Spring Security.
-- **Role-Based Access Control:** Different levels of access and features are available based on user roles (e.g., admin, regular user).
+### **📊 Board View**
+- A **Kanban-style board** displays tickets categorized by **status**: Open, In Progress, Done, and Closed.
+- A **Summary column** provides:
+  - The **total number of tickets** per status.
+  - A **progress bar** displaying the ratio of **time spent vs estimated time**.
+- Clicking on a ticket opens a **detailed summary popup**.
+
+### **🔔 Watched Tickets**
+- Users can **flag a ticket as watched** in the **ticket details page**.
+- The sidebar dynamically updates with the **count of watched tickets**.
+- Clicking on "X Watched" in the sidebar leads to a **summary page** displaying all watched tickets.
+
+### **📅 Milestone Management**
+- Users can **create milestones** via the sidebar.
+- Each milestone can **contain multiple tickets**.
+- Tickets can be added to a milestone via the **dedicated milestone screen**.
+- **Milestones are displayed as cards**, with a **progress bar** indicating the ratio of **total vs resolved tickets**.
+- Clicking the **"Mark as Completed"** button **closes** the milestone.
+
+### **🏷️ Tagging System**
+- Users can **add tags** to tickets in the **ticket details page**.
+- Tags are displayed in the **left sidebar under "Tags"**.
+- **Duplicate tags are not allowed**.
+- Clicking on a tag filters and displays **only the tickets associated with that tag**.
+
+### **💬 Ticket Comments**
+- Users can **leave comments** on tickets via the **ticket details page**.
+- Each user can **delete their own comments**.
+- Users can **reply to other comments**.
+- **If a user deletes a comment that has replies, all replies are also deleted**.
 
 ---
-
-## Technology Stack
-- **Frontend:** HTML, CSS, JavaScript, Thymeleaf, Bootstrap
-- **Backend:** Spring Boot (Java), Hibernate
-- **Database:** MySQL (or any compatible SQL database)
-- **Security:** Spring Security for authentication and authorization
-- **Tools:** Maven for project management
+## **🔧 Technologies Used**
+- **Frontend:** Thymeleaf, Bootstrap
+- **Backend:** Spring Boot, Spring MVC
+- **Database:** Hibernate, JPA
+- **Authentication:** Spring Security
+- **Version Control:** Git, GitHub
 
 ---
+## **📌 How to Run the Project**
+1. Clone the repository:
+   ```bash
+   git clone git@github.com:MattiaVerdolin/ticket-service.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd ticket-service
+   ```
+3. Build and run the application:
+   ```bash
+   mvn spring-boot:run
+   ```
+4. Open **`http://localhost:8080`** in your browser.
 
-## Usage Guide
-
-### Ticket Management
-1. **Create Ticket**
-    - Navigate to the "Create Ticket" page.
-    - Fill out the required fields and submit the form.
-
-2. **View Tickets**
-    - Go to the dashboard to see all available tickets.
-    - Use the search and filter options for a tailored view.
-
-3. **Edit Ticket**
-    - Select a ticket from the list.
-    - Click "Edit" to modify its details.
-
-4. **View Ticket Details**
-    - Click on a ticket to open its detailed view.
-
+---
+## **👤 Author**
+**Mattia Verdolin** [📧mattia.verdolin@student.supsi.ch](mailto:mattia.verdolin@student.supsi.ch)
 
