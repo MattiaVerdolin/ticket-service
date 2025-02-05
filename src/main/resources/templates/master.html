@@ -61,6 +61,11 @@
                             Watched
                         </a>
 
+                        <a class="nav-link" th:classappend="${servletPath == '/board' ? 'active':''}" th:href="@{/board}">
+                            <span class="bi bi-columns-gap"></span>
+                            Board
+                        </a>
+
                         <hr>
                         <!-- milestones section -->
                         <a class="nav-link" th:classappend="${servletPath == '/milestones' ? 'active':''}" th:href="@{/milestones}">

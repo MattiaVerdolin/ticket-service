@@ -432,8 +432,128 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+/**
+ * Mostra i dettagli di un ticket specifico.
+ * Effettua una richiesta AJAX utilizzando `fetch` per ottenere i dettagli del ticket
+ * dal server e aggiorna dinamicamente il contenuto del riquadro dei dettagli.
+ *
+ * @param {number} ticketId - L'ID del ticket di cui si vogliono visualizzare i dettagli.
+ */
+function showTicketDetails(ticketId) {
+    // Effettua una richiesta GET al server per ottenere i dettagli del ticket
+    fetch(`/tickets/details/${ticketId}`) // Assicurati che il percorso corrisponda a un endpoint esistente
+        .then(response => {
+            // Controlla se la risposta è andata a buon fine
+            if (!response.ok) {
+                throw new Error('Network response was not ok, HTTP error Status = ' + response.status);
+            }
+            return response.json(); // Converte la risposta in JSON
+        })
+        .then(ticket => {
+            // Aggiorna il contenuto HTML del riquadro dei dettagli con i dati del ticket
+            document.getElementById('ticket-title').textContent = ticket.title;
+            document.getElementById('ticket-creation-date').textContent = ticket.creationDate;
+            document.getElementById('ticket-due-date').textContent = ticket.dueDate;
+            document.getElementById('ticket-time-estimate').textContent = ticket.timeEstimate;
+            document.getElementById('ticket-time-spent').textContent = ticket.timeSpent;
+            document.getElementById('ticket-author').textContent = ticket.author;
+            document.getElementById('ticket-assignee').textContent = ticket.assignee;
+            document.getElementById('ticket-status').textContent = ticket.status;
+            document.getElementById('ticket-type').textContent = ticket.type;
+
+            // Mostra il riquadro dei dettagli rendendolo visibile
+            document.getElementById('ticket-details').style.display = 'block';
+        })
+        .catch(error => console.error('Error fetching ticket details:', error)); // Gestisce eventuali errori
+}
+
+/**
+ * Nasconde il riquadro dei dettagli del ticket.
+ * Modifica lo stile del riquadro dei dettagli per renderlo invisibile.
+ */
+function hideTicketDetails() {
+    // Seleziona l'elemento HTML del riquadro dei dettagli
+    const ticketDetails = document.getElementById('ticket-details');
+
+    // Nasconde il riquadro impostando il display su 'none'
+    ticketDetails.style.display = 'none';
+
+    // Debug: registra un messaggio nella console per indicare che il riquadro è stato nascosto
+    console.log('Details hidden');
+}
 
 
+/**
+ * Questo script utilizza l'Event Delegation per gestire i clic su tutti i pulsanti "watch-button".
+ * Invece di aggiungere un evento `click` su ogni pulsante, si ascolta l'evento a livello di `document`.
+ * Questo approccio è più efficiente e funziona anche per gli elementi aggiunti dinamicamente al DOM.
+ * Il comportamento del pulsante viene aggiornato immediatamente al clic, con un feedback visivo,
+ * mentre una chiamata al server aggiorna lo stato nel backend.
+ */
 
+document.addEventListener('click', (event) => {
+    // **1. Identificazione del pulsante cliccato**
+    // Utilizza `event.target.closest` per trovare l'elemento con la classe 'watch-button'
+    // più vicino al punto in cui è avvenuto il clic. Questo gestisce anche i clic su elementi
+    // interni (es. icone o testo) all'interno del pulsante.
+    const button = event.target.closest('.watch-button');
 
+    // Se il clic non è avvenuto su un pulsante valido, esci immediatamente dalla funzione.
+    if (!button) return;
 
+    // **2. Recupero delle informazioni dal pulsante**
+    // Ottieni l'ID del ticket dal pulsante (preso dall'attributo `data-id`).
+    const ticketId = button.getAttribute('data-id');
+    // Controlla se il ticket è già stato osservato (preso dall'attributo `data-watched`).
+    const isWatched = button.getAttribute('data-watched') === 'true';
+
+    // **3. Se il ticket è già osservato, esci**
+    if (isWatched) return;
+
+    // **4. Aggiornamento immediato del pulsante**
+    // Modifica il testo del pulsante per indicare lo stato "Watched".
+    button.querySelector('span:nth-child(2)').textContent = 'Watched';
+    button.classList.remove('btn-outline-info');
+    button.classList.add('btn-info');
+    // Cambia l'icona da un occhio (`bi-eye`) a un segno di spunta (`bi-check`).
+    button.querySelector('span:nth-child(1)').classList.replace('bi-eye', 'bi-check');
+    // Aggiorna l'attributo `data-watched` per riflettere il nuovo stato.
+    button.setAttribute('data-watched', 'true');
+
+    // **5. Invio della richiesta al server**
+    // Esegui una chiamata POST per informare il server che il ticket è stato aggiunto alla lista.
+    fetch(`/tickets/watch/${ticketId}`, {
+        method: 'POST', // Specifica il metodo HTTP
+        headers: {
+            'Content-Type': 'application/json' // Indica il tipo di contenuto della richiesta
+        }
+    })
+        .then(response => {
+            // Controlla se la risposta è OK (status 200-299).
+            if (!response.ok) {
+                throw new Error('Failed to add ticket to watches'); // Solleva un'eccezione in caso di errore.
+            }
+            return response.text(); // Estrai il corpo della risposta come testo.
+        })
+        .then(message => {
+            // **6. Aggiornamento del contatore laterale**
+            // Trova l'elemento del contatore (#watch-count) e incrementalo.
+            const watchCountElement = document.querySelector('#watch-count');
+            if (watchCountElement) {
+                const currentCount = parseInt(watchCountElement.textContent, 10);
+                watchCountElement.textContent = currentCount + 1; // Incrementa il valore attuale.
+            }
+            console.log(message); // Logga il messaggio di successo dal server.
+        })
+        .catch(error => {
+            // **7. Gestione degli errori**
+            console.error('Error:', error);
+
+            // Ripristina lo stato del pulsante in caso di errore.
+            button.querySelector('span:nth-child(2)').textContent = 'Watch';
+            button.classList.remove('btn-info');
+            button.classList.add('btn-outline-info');
+            button.querySelector('span:nth-child(1)').classList.replace('bi-check', 'bi-eye');
+            button.setAttribute('data-watched', 'false');
+        });
+});
