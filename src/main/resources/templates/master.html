@@ -41,6 +41,8 @@
             <div class="position-sticky pt-3 sidebar-sticky">
                 <ul class="nav flex-column">
                     <li class="nav-item">
+
+                        <!-- tickets section -->
                         <a class="nav-link" th:classappend="${servletPath == '/' || #servletPath == '/home-table' ? 'active':''}" th:href="@{/}">
                             <span class="bi bi-ticket"></span>
                             Tickets
@@ -49,7 +51,18 @@
                             <span class="bi bi-plus-square"></span>
                             New ticket
                         </a>
+                        <!-- watched section -->
+                        <a class="nav-link"
+                           th:classappend="${servletPath == '/watches' ? 'active':''}"
+                           th:href="@{/watches}"
+                           sec:authorize="hasRole('ADMIN')">
+                            <span class="bi bi-eye"></span>
+                            <span id="watch-count" th:text="${user != null ? #lists.size(user.watches) : 0}">0</span>
+                            Watched
+                        </a>
+
                         <hr>
+                        <!-- milestones section -->
                         <a class="nav-link" th:classappend="${servletPath == '/milestones' ? 'active':''}" th:href="@{/milestones}">
                             <span class="bi bi-folder"></span>
                             Milestones
@@ -60,7 +73,7 @@
                         </a>
 
                         <hr>
-
+                        <!-- tags section -->
                         <a class="nav-link">
                             <span class="bi bi-columns-gap"></span>
                             Tags
@@ -72,7 +85,6 @@
                                 <span th:text="${tag}"></span>
                             </a>
                         </div>
-
 
                     </li>
                 </ul>

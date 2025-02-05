@@ -16,13 +16,13 @@
                     <article class="col-md-12">
                         <div sec:authorize="hasRole('ADMIN')">
 
-<!--                            <a class="btn btn-sm watch-button"-->
-<!--                               th:classappend="${watchedTickets.contains(ticket) ? 'btn-info' : 'btn-outline-info'}"-->
-<!--                               th:data-id="${ticket.id}"-->
-<!--                               th:data-watched="${watchedTickets.contains(ticket)}">-->
-<!--                                <span th:classappend="${watchedTickets.contains(ticket) ? 'bi bi-check' : 'bi bi-eye'}"></span>-->
-<!--                                <span th:text="${watchedTickets.contains(ticket) ? 'Watched' : 'Watch'}"></span>-->
-<!--                            </a>-->
+                            <a class="btn btn-sm watch-button"
+                               th:classappend="${watchedTickets.contains(ticket) ? 'btn-info' : 'btn-outline-info'}"
+                               th:data-id="${ticket.id}"
+                               th:data-watched="${watchedTickets.contains(ticket)}">
+                                <span th:classappend="${watchedTickets.contains(ticket) ? 'bi bi-check' : 'bi bi-eye'}"></span>
+                                <span th:text="${watchedTickets.contains(ticket) ? 'Watched' : 'Watch'}"></span>
+                            </a>
 
                             <a class="btn btn-sm btn-outline-secondary"
                                sec:authorize-url="/ticket/*/edit"
@@ -73,7 +73,7 @@
                             </div>
                         </div>
 
-                        <!-- Campo Time Spent, visibile solo per l'assignee -->
+                        <!-- Time Spent, visible only to the assignee -->
                         <div class="row" th:if="${ticket.assignee?.username == #authentication.name}">
                             <div class="col-md-12">
                                 <h6 class="fw-bold mt-3 mb-2">Update Time Spent</h6>
@@ -86,12 +86,12 @@
                             </div>
                         </div>
 
-
-
+                        <!-- Description Section -->
                         <h5 class="pt-3"><span class="bi bi-caret-right-fill"></span> Description</h5>
                         <hr>
                         <p th:text="${ticket.description}" class="detail-description">Description ticket</p>
 
+                        <!-- Attachment Section -->
                         <h5 class="pt-3"><span class="bi bi-caret-right-fill"></span> Attachment</h5>
                         <hr>
                         <p th:if="${ticket.attachment == null}">There's no attachment for this ticket</p>
@@ -99,7 +99,7 @@
                             <a th:href="@{'/ticket/'+${ticket.id}+'/attachment'}" target="_blank" th:text="${ticket.attachment.name}"></a> (<span th:text="${ticket.attachment.contentType}"></span>) <span th:text="${ticket.attachment.readeableSize}"></span>
                         </p>
 
-                        <!-- Sezione Tag -->
+                        <!-- Tag Section -->
                         <h5 class="pt-3"><span class="bi bi-caret-right-fill"></span> Tags</h5>
                         <hr>
 
