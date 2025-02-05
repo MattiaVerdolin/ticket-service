@@ -99,6 +99,52 @@
                             <a th:href="@{'/ticket/'+${ticket.id}+'/attachment'}" target="_blank" th:text="${ticket.attachment.name}"></a> (<span th:text="${ticket.attachment.contentType}"></span>) <span th:text="${ticket.attachment.readeableSize}"></span>
                         </p>
 
+                        <!-- Comments Section -->
+                        <h5 class="pt-3"><span class="bi bi-caret-right-fill"></span> Comments</h5>
+                        <hr>
+                        <a class="btn btn-sm btn-primary mb-3" th:href="'/comments/add?ticketId=' + ${ticket.id}">
+                            <span class="bi bi-plus"></span> Aggiungi commento
+                        </a>
+
+                        <div th:if="${comments != null and comments.isEmpty()}">
+                            <p>Non ci sono commenti.</p>
+                        </div>
+
+                        <div th:each="comment : ${comments}">
+                            <div th:fragment="commentBlock(comment)">
+                                <div class="border rounded p-2 mb-3" th:style="'margin-left: ' + ${comment.depth * 40} + 'px;'">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <p class="mb-0">
+                                            <strong th:text="${comment.author.username}">Autore</strong> |
+                                            <span th:text="${#temporals.format(comment.createdDate, 'dd/MM/yyyy HH:mm')}">Data</span>
+                                        </p>
+
+                                        <div>
+                                            <a class="btn btn-sm btn-outline-secondary" th:if="${actualUser != comment.author.username}"
+                                               th:href="'/comments/add?ticketId=' + ${ticket.id} + '&parentCommentId=' + ${comment.id}">
+                                                <span class="bi bi-reply"></span> Rispondi
+                                            </a>
+
+                                            <button class="btn btn-sm btn-outline-danger delete-comment"
+                                                    th:if="${actualUser == comment.author.username}"
+                                                    th:data-id="${comment.id}">
+                                                <span class="bi bi-trash"></span> Rimuovi
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <p th:text="${comment.text}" class="mt-2">Testo del commento</p>
+
+                                    <!-- Gestione ricorsiva dei commenti figli -->
+                                    <div th:if="${!#lists.isEmpty(comment.replies)}">
+                                        <div th:each="childComment : ${comment.replies}">
+                                            <div th:insert="this :: commentBlock(${childComment})"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
                         <!-- Tag Section -->
                         <h5 class="pt-3"><span class="bi bi-caret-right-fill"></span> Tags</h5>
                         <hr>

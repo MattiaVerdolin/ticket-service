@@ -20,8 +20,8 @@
         </div>
     </div>
     <div class="row">
-        <article class="col-sm-6 col-md-6 col-lg-4 col-xl-3" th:each="ticket : ${tickets}">
-            <div class="card mb-4 shadow-sm">
+        <article class="col-sm-12 col-md-6 col-lg-6 col-xl-6" th:each="ticket : ${tickets}">
+        <div class="card mb-4 shadow-sm">
                 <div class="card-body">
                     <p style="color:grey">
                         <span th:text="'#'+${ticket.id}"></span>
@@ -36,6 +36,7 @@
                         <div class="btn-group">
                             <a class="btn btn-sm btn-outline-secondary" th:href="@{'/ticket/'+${ticket.id}}">View</a>
                             <a class="btn btn-sm btn-outline-secondary" sec:authorize-url="/ticket/*/edit" th:href="@{'/ticket/'+${ticket.id}+'/edit'}">Edit</a>
+                            <a class="btn btn-sm btn-outline-secondary" sec:authorize="hasRole('ADMIN')" th:href="@{'/ticket/' + ${ticket.id} + '/quickEdit'}">Quick edit</a>
                             <a class="btn btn-sm btn-outline-secondary" th:if="${ticket.assignee?.username == #authentication.name}" th:href="@{'/ticket/'+${ticket.id}}">Set time spent</a>
                             <a class="btn btn-sm btn-outline-secondary change-state-btn"
                                     th:data-ticket-id="${ticket.id}"

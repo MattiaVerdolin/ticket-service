@@ -158,6 +158,27 @@ public class TicketController {
             return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Invalid status"));
         }
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> updateTicketField(
+            @PathVariable int id,
+            @RequestParam String fieldName,
+            @RequestParam String newValue) {
+        try {
+            Ticket ticket = ticketService.get(id);
+            if ("title".equals(fieldName)) {
+                ticket.setTitle(newValue);
+            } else if ("description".equals(fieldName)) {
+                ticket.setDescription(newValue);
+            } else {
+                return ResponseEntity.badRequest().body("Campo non valido");
+            }
+            ticketService.put(ticket); // Salva il ticket aggiornato
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante l'aggiornamento");
+        }
+    }
 }
 
 

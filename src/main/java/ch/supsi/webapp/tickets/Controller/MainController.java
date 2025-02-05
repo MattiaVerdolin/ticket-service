@@ -2,10 +2,7 @@ package ch.supsi.webapp.tickets.Controller;
 
 import ch.supsi.webapp.tickets.dto.TicketDTO;
 import ch.supsi.webapp.tickets.model.*;
-import ch.supsi.webapp.tickets.service.MilestoneService;
-import ch.supsi.webapp.tickets.service.TagService;
-import ch.supsi.webapp.tickets.service.TicketService;
-import ch.supsi.webapp.tickets.service.UserService;
+import ch.supsi.webapp.tickets.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,7 +16,10 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -33,6 +33,7 @@ public class MainController {
     private final TicketService ticketService;
     private final UserService userService;
     private final TagService tagService;
+    private final CommentService commentService;
 
     /**
      * Costruttore della classe MainController.
@@ -40,10 +41,11 @@ public class MainController {
      * @param service il servizio per la gestione dei ticket
      * @param userService il servizio per la gestione degli utenti
      */
-    public MainController(TicketService service, UserService userService, TagService tagService) {
+    public MainController(TicketService service, UserService userService, TagService tagService, CommentService commentService) {
         this.ticketService = service;
         this.userService = userService;
         this.tagService = tagService;
+        this.commentService = commentService;
     }
 
     /**
@@ -131,10 +133,55 @@ public class MainController {
      */
     @GetMapping("/ticket/{id}")
     public String detail(@PathVariable int id, Model model, Principal principal) {
+
+        Ticket ticket = ticketService.get(id);
+        List<Comment> flatComments = commentService.getCommentsByTicket(ticket);
+
+        if (flatComments == null) {
+            flatComments = new ArrayList<>();
+        }
+
+        // Creare la struttura ad albero
+        List<Comment> commentTree = buildCommentTree(flatComments);
+
         model.addAttribute("ticket", getTicketOrThrow(id));
+        model.addAttribute("comments", commentTree);
         model.addAttribute("user", getCurrentUser(principal));
+        model.addAttribute("actualUser", principal.getName());
         model.addAttribute("watchedTickets", getCurrentUser(principal).getWatches());
         return "detail";
+    }
+
+    // Metodo per costruire l'albero dei commenti
+    private List<Comment> buildCommentTree(List<Comment> comments) {
+        Map<Long, Comment> commentMap = new HashMap<>();
+        List<Comment> roots = new ArrayList<>();
+
+        // Mappa tutti i commenti per ID
+        for (Comment comment : comments) {
+            commentMap.put(comment.getId(), comment);
+        }
+
+        // Costruisce la gerarchia
+        for (Comment comment : comments) {
+            if (comment.getParent() != null) {
+                Comment parent = commentMap.get(comment.getParent().getId());
+                if (parent != null) {
+                    parent.getReplies().add(comment);
+                }
+            } else {
+                roots.add(comment);
+            }
+        }
+
+        return roots;
+    }
+
+    @GetMapping("/ticket/{id}/quickEdit")
+    public String quickEdit(@PathVariable int id, Model model) {
+        Ticket ticket = ticketService.get(id);
+        model.addAttribute("ticket", ticket);
+        return "quickEdit";
     }
 
     /**

@@ -130,6 +130,10 @@ public class Ticket {
 	)
 	private List<Tag> tags = new ArrayList<>();
 
+	@OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true)
+	@ToString.Exclude
+	private List<Comment> comments = new ArrayList<>();
+
 	public void addTag(Tag tag) {
 		if (!tags.contains(tag)) {
 			tags.add(tag);

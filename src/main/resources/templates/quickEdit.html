@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{master :: layout(_,~{::meta},~{::main/content()})}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="Mattia Verdolin">
+    <meta name="description" content="Edit Ticket">
+    <title>SUPSI tickets - Quick Edit</title>
+    <script th:src="@{/js/autoSave.js}" defer></script>
+</head>
+<body>
+<main>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <nav class="h6">
+            <span><a th:href="@{/}">Tickets</a> /</span>
+            <span th:text="${ticket.title}">Ticket title</span> /
+            <span>Quick Edit</span>
+        </nav>
+        <hr>
+    </div>
+    <div class="row">
+        <form>
+            <div class="mb-3 row">
+                <label for="title" class="col-sm-2 col-form-label">Title</label>
+                <div class="col-sm-10">
+                    <input id="title" type="text" class="form-control" th:value="${ticket.title}" th:data-ticket-id="${ticket.id}" />
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label for="description" class="col-sm-2 col-form-label">Description</label>
+                <div class="col-sm-10">
+                    <textarea id="description" class="form-control" rows="5" th:text="${ticket.description}" th:data-ticket-id="${ticket.id}"></textarea>
+                </div>
+            </div>
+
+            <hr>
+            <a th:href="@{/}" class="btn btn-secondary">Back to Ticket</a>
+        </form>
+    </div>
+</main>
+</body>
+</html>

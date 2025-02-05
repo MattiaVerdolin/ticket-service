@@ -321,7 +321,116 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(error => console.error("Errore nel caricamento dei tag:", error));
 });
 
+// Attende che il documento HTML sia completamente caricato
+document.addEventListener('DOMContentLoaded', () => {
+    // Seleziona tutti i pulsanti con la classe CSS "delete-comment"
+    const deleteButtons = document.querySelectorAll('.delete-comment');
 
+    // Itera su ogni pulsante trovato
+    deleteButtons.forEach(button => {
+        // Aggiunge un event listener al clic del pulsante
+        button.addEventListener('click', async (event) => {
+            // Impedisce il comportamento predefinito del pulsante (es. navigazione)
+            event.preventDefault();
+
+            // Recupera l'attributo "data-id" del pulsante che rappresenta l'ID del commento
+            const commentId = button.getAttribute('data-id');
+
+            // Controlla se l'ID del commento esiste; se no, mostra un messaggio di errore
+            if (!commentId) {
+                console.error("ID del commento non trovato");
+                return; // Termina l'esecuzione della funzione
+            }
+
+            try {
+                // Effettua una richiesta AJAX utilizzando il metodo DELETE all'endpoint del commento
+                const response = await fetch(`/comments/${commentId}`, {
+                    method: 'DELETE', // Specifica il metodo HTTP DELETE
+                    headers: {
+                        'Content-Type': 'application/json' // Imposta l'intestazione per indicare JSON
+                    }
+                });
+
+                // Controlla se la risposta del server è positiva
+                if (response.ok) {
+                    // Trova l'elemento DOM più vicino con la classe "border" (contenitore del commento)
+                    const commentDiv = button.closest('.border');
+
+                    // Rimuove l'elemento dal DOM se esiste
+                    if (commentDiv) {
+                        commentDiv.remove();
+                    } else {
+                        // Se non trova l'elemento, mostra un messaggio di errore nel console log
+                        console.error("Elemento commento non trovato nel DOM.");
+                    }
+                } else if (response.status === 403) {
+                    // Caso in cui l'utente non è autorizzato a eliminare il commento
+                    console.error('Non sei autorizzato a rimuovere questo commento.');
+                } else {
+                    // Caso generico di errore nella rimozione del commento
+                    console.error('Errore durante la rimozione del commento.');
+                }
+            } catch (error) {
+                // Gestisce eventuali errori durante la richiesta
+                console.error('Errore:', error);
+            }
+        });
+    });
+});
+
+
+// Aspetta che il documento HTML sia completamente caricato prima di eseguire il codice
+document.addEventListener('DOMContentLoaded', () => {
+    // Seleziona i campi di input con gli ID "title" e "description"
+    const fields = document.querySelectorAll('#title, #description');
+
+    // Itera su ogni campo selezionato
+    fields.forEach(field => {
+        // Aggiunge un listener per l'evento "blur" (quando il campo perde il focus)
+        field.addEventListener('blur', async (event) => {
+            // Recupera l'elemento che ha generato l'evento
+            const element = event.target;
+
+            // Estrae l'ID del ticket dall'attributo "data-ticket-id" del campo
+            const ticketId = element.dataset.ticketId;
+
+            // Estrae l'ID del campo (ad es. "title" o "description") per identificare il campo modificato
+            const fieldName = element.id;
+
+            // Recupera il nuovo valore inserito dall'utente
+            const newValue = element.value;
+
+            try {
+                // Esegue una richiesta AJAX utilizzando il metodo PATCH per aggiornare il ticket
+                const response = await fetch(`/tickets/${ticketId}`, {
+                    method: 'PATCH', // Indica che stiamo eseguendo un aggiornamento parziale
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded', // Specifica il formato dei dati inviati
+                    },
+                    // Invia i dati aggiornati (nome del campo e nuovo valore) codificati come URL
+                    body: `fieldName=${fieldName}&newValue=${encodeURIComponent(newValue)}`
+                });
+
+                // Se la risposta è positiva, cambia il bordo del campo in verde
+                if (response.ok) {
+                    element.style.border = '2px solid green'; // Aggiornamento riuscito
+                } else {
+                    // In caso di errore, cambia il bordo del campo in rosso
+                    element.style.border = '2px solid red'; // Errore nell'aggiornamento
+                }
+            } catch (error) {
+                // Gestisce eventuali errori durante la richiesta
+                console.error('Errore durante l\'aggiornamento:', error);
+                element.style.border = '2px solid red'; // Errore generico
+            }
+
+            // Dopo 2 secondi, rimuove il bordo per ripristinare l'aspetto originale
+            setTimeout(() => {
+                element.style.border = '';
+            }, 2000);
+        });
+    });
+});
 
 
 
