@@ -50,7 +50,7 @@ This is a **web-based ticket management system** designed to help users create, 
 - **If a user deletes a comment that has replies, all replies are also deleted**.
 
 ---
-## **🔧 Technologies Used**
+### **🔧 Technologies Used**
 - **Frontend:** Thymeleaf, Bootstrap
 - **Backend:** Spring Boot, Spring MVC
 - **Database:** Hibernate, JPA
@@ -58,11 +58,30 @@ This is a **web-based ticket management system** designed to help users create, 
 - **Version Control:** Git, GitHub
 
 ---
-## **📌 How to Run the Project**
+### 🛠️ Database Configuration
+To run this project, you need to have an SQL database set up on your machine.  
+The application is configured to use **MySQL**, but you can modify the configuration for another database.
+
+Before running the application, update the `application.properties` file with your database credentials.  
+Replace the following parameters as needed:
+
+```properties
+# Set the correct database name and port
+spring.datasource.url=jdbc:mysql://localhost:3306/YOUR_DATABASE_NAME
+
+# Use your database username
+spring.datasource.username=YOUR_USERNAME
+
+# Use your database password
+spring.datasource.password=YOUR_PASSWORD
+   ```
+
+---
+### **📌 How to Run the Project**
 1. Clone the repository:
    ```bash
    git clone git@github.com:MattiaVerdolin/ticket-service.git
-   ```
+
 2. Navigate to the project directory:
    ```bash
    cd ticket-service
@@ -75,5 +94,5 @@ This is a **web-based ticket management system** designed to help users create, 
 
 ---
 ## **👤 Author**
-**Mattia Verdolin** [📧mattia.verdolin@student.supsi.ch](mailto:mattia.verdolin@student.supsi.ch)
+**Mattia Verdolin** 📧 [mattia.verdolin@student.supsi.ch](mailto:mattia.verdolin@student.supsi.ch)
 
