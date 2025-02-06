@@ -15,21 +15,12 @@ public class TagService {
         this.tagRepository = tagRepository;
     }
 
-    /**
-     * Recupera tutti i tag disponibili nel database.
-     * @return Una lista di nomi dei tag.
-     */
     public List<String> getAllTags() {
         return tagRepository.findAll().stream()
                 .map(Tag::getName)
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Aggiunge un nuovo tag se non esiste già.
-     * @param tagName Nome del tag da aggiungere.
-     * @return Il tag appena creato o già esistente.
-     */
     public Tag addTag(String tagName) {
         return tagRepository.findByName(tagName)
                 .orElseGet(() -> tagRepository.save(new Tag(tagName)));

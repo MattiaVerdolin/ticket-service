@@ -44,15 +44,5 @@ public class Comment {
     @Transient
     private int depth;
 
-    public int getDepth() {
-        int depth = 0;
-        Comment parent = this.parent;
-        while (parent != null) {
-            depth++;
-            parent = parent.getParent();
-        }
-        return depth;
-    }
-
 }
 

@@ -10,7 +10,6 @@ import java.util.List;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    // Recupera tutti i commenti associati a un ticket, ordinati per data di creazione (dal più recente al più vecchio)
     List<Comment> findByTicketOrderByCreatedDateDesc(Ticket ticket);
 }
 

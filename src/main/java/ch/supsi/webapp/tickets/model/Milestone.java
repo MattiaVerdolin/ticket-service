@@ -18,10 +18,7 @@ import java.util.List;
 @ToString
 @Entity
 public class Milestone {
-    /**
-     * Identificativo univoco del ticket.
-     * Generato automaticamente dal database.
-     */
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

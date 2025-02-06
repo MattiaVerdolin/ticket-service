@@ -32,90 +32,39 @@ import java.util.List;
 @Entity
 public class Ticket {
 
-	/**
-	 * Identificativo univoco del ticket.
-	 * Generato automaticamente dal database.
-	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	/**
-	 * Titolo del ticket, che rappresenta un breve riepilogo.
-	 */
 	private String title;
 
-	/**
-	 * Descrizione dettagliata del problema o attività associata al ticket.
-	 * Memorizzata come `TEXT` nel database per supportare grandi quantità di testo.
-	 */
 	@Column(columnDefinition = "TEXT")
 	private String description;
 
-	/**
-	 * Data di creazione del ticket.
-	 */
 	private Date date;
 
-	/**
-	 * Utente che ha creato il ticket.
-	 * È una relazione @ManyToOne poiché un utente può creare più ticket.
-	 */
 	@ManyToOne
 	private User author;
 
-	/**
-	 * Stato corrente del ticket, ad esempio OPEN, IN_PROGRESS, DONE, CLOSED.
-	 * Memorizzato come stringa grazie a @Enumerated(EnumType.STRING).
-	 */
 	@Enumerated(EnumType.STRING)
 	private TicketStatus status;
 
-	/**
-	 * Tipo del ticket, ad esempio BUG, TASK, STORY.
-	 * Anch'esso memorizzato come stringa.
-	 */
 	@Enumerated(EnumType.STRING)
 	private TicketType type;
 
-	/**
-	 * Allegato associato al ticket.
-	 * È un oggetto embeddable che include il contenuto del file e i relativi metadati.
-	 * Annotato con @JsonIgnore per escluderlo dalle risposte JSON.
-	 */
 	@Embedded
 	@JsonIgnore
 	private Attachment attachment;
 
-	// Nuovi campi per esame di prova
-
-	/**
-	 * Utente assegnato al ticket.
-	 * Un ticket può essere assegnato a un solo utente, ma un utente può avere più ticket assegnati.
-	 */
 	@ManyToOne
 	private User assignee;
 
-	/**
-	 * Data di scadenza del ticket.
-	 * Indica il termine entro cui il ticket deve essere completato.
-	 */
 	private LocalDate dueDate;
 
-	/**
-	 * Tempo stimato (in ore) necessario per completare il ticket.
-	 */
 	private int estimate;
 
-	/**
-	 * Tempo effettivamente speso (in ore) sul ticket.
-	 */
 	private int timeSpent;
 
-	/**
-	 * Progresso del ticket in percentuale.
-	 * Calcolato in base al tempo stimato e al tempo speso.
-	 */
 	private float progress;
 
 	@ManyToOne
@@ -140,10 +89,4 @@ public class Ticket {
 			tag.getTickets().add(this);
 		}
 	}
-
-	public void removeTag(Tag tag) {
-		tags.remove(tag);
-		tag.getTickets().remove(this);
-	}
-
 }

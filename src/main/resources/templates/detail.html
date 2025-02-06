@@ -120,13 +120,13 @@
                                         </p>
 
                                         <div>
-                                            <a class="btn btn-sm btn-outline-secondary" th:if="${actualUser != comment.author.username}"
+                                            <a class="btn btn-sm btn-outline-secondary" th:if="${user.getUsername() != comment.author.username}"
                                                th:href="'/comments/add?ticketId=' + ${ticket.id} + '&parentCommentId=' + ${comment.id}">
                                                 <span class="bi bi-reply"></span> Rispondi
                                             </a>
 
                                             <button class="btn btn-sm btn-outline-danger delete-comment"
-                                                    th:if="${actualUser == comment.author.username}"
+                                                    th:if="${user.getUsername() == comment.author.username}"
                                                     th:data-id="${comment.id}">
                                                 <span class="bi bi-trash"></span> Rimuovi
                                             </button>
