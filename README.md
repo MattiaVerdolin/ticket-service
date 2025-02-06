@@ -96,3 +96,8 @@ spring.datasource.password=YOUR_PASSWORD
 ## **👤 Author**
 **Mattia Verdolin** 📧 [mattia.verdolin@student.supsi.ch](mailto:mattia.verdolin@student.supsi.ch)
 
+---
+
+## 📜 License
+This project was developed for educational purposes as part of the SUPSI Web Application 1 course. Redistribution or use outside the context of the course may require explicit permission from the author.
+
